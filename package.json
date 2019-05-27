@@ -21,6 +21,13 @@
   ],
   "author": "Andrea Giammarchi",
   "license": "ISC",
+  "greenkeeper": {
+    "ignore": [
+      "rollup",
+      "rollup-plugin-babel",
+      "rollup-plugin-node-resolve"
+    ]
+  },
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
