@@ -4,6 +4,14 @@
 
 Extensible, general purpose, React like [hooks](https://reactjs.org/docs/hooks-reference.html) for the masses.
 
+## Project status
+
+I'm currently unable to find time to maintain this project, which implies its direct or indirect dependents might be affected long time if a bug is found (and there are easily bugs in here).
+
+I don't know how many other alternatives there are out there, but [tng-hooks](https://github.com/getify/TNG-Hooks) seems to be more active and popular.
+
+- - -
+
 Code Pen **[playground](https://codepen.io/WebReflection/pen/qLMyOM?editors=0010)**.
 
 Include via:
