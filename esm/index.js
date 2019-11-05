@@ -1,26 +1,7 @@
-import augmentor from './core.js';
-
-import {useEffect, useLayoutEffect} from './use/effect.js';
-
-import useRef from './use/ref.js';
-
-import useMemo from './use/memo.js';
-import useCallback from './use/callback.js';
-
-import useReducer from './use/reducer.js';
-import useState from './use/state.js';
-
-import {createContext, useContext} from './use/context.js';
-
-export default augmentor;
-export {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState
-};
+export {augmentor} from './utils.js';
+export {useState} from './use-state.js';
+export {useEffect, useLayoutEffect, dropEffect} from './use-effect.js';
+export {useMemo} from './use-memo.js';
+export {useCallback} from './use-callback.js';
+export {useReducer} from './use-reducer.js';
+export {useRef} from './use-ref.js';

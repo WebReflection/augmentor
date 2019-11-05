@@ -1,14 +1,14 @@
 {
   "name": "augmentor",
-  "version": "0.2.6",
-  "description": "Extensible, general purpose, React like hooks for the masses.",
+  "version": "0.0.0",
+  "description": "React like hooks for the masses",
   "module": "esm/index.js",
   "main": "cjs/index.js",
   "unpkg": "min.js",
   "scripts": {
-    "build": "rollup --config rollup.config.js && npm run clean && npm run cjs && npm run min && npm run test && npm run size",
-    "clean": "cat index.js | sed 's/(exports)/()/;s/({})/()/;s/exports.default = augmentor;//;s/exports\\./augmentor./g;s/return exports;/return augmentor;/' > index.clean && mv index.clean index.js && drop-babel-typeof index.js",
+    "build": "npm run cjs && npm run clean && rollup --config rollup.config.js && npm run min && npm run test && npm run size",
     "cjs": "ascjs esm cjs",
+    "clean": "sed -i 's/(m => m.__esModule.*m)//' cjs/{use-state,use-effect}.js",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "min": "uglifyjs index.js -m -c -o min.js",
     "size": "cat index.js | wc -c;cat min.js | wc -c;gzip -c9 min.js | wc -c;cat min.js | brotli | wc -c",
@@ -16,8 +16,7 @@
   },
   "keywords": [
     "hooks",
-    "configurable",
-    "extensible"
+    "library"
   ],
   "author": "Andrea Giammarchi",
   "license": "ISC",
@@ -29,16 +28,17 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
-    "ascjs": "^3.0.0",
-    "basichtml": "^0.22.0",
-    "coveralls": "^3.0.3",
-    "drop-babel-typeof": "^1.0.3",
+    "@babel/core": "^7.7.0",
+    "@babel/preset-env": "^7.7.1",
+    "ascjs": "^3.1.0",
+    "coveralls": "^3.0.7",
     "istanbul": "^0.4.5",
-    "rollup": "^1.10.0",
-    "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-node-resolve": "^4.2.2",
-    "uglify-js": "^3.5.4"
+    "rollup": "^1.26.3",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "uglify-js": "^3.6.7"
+  },
+  "dependencies": {
+    "reraf": "^1.1.1"
   }
 }
