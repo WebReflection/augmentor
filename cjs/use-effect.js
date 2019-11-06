@@ -6,7 +6,7 @@ const effects = new WeakMap;
 const stop = () => {};
 
 const createEffect = sync => (effect, guards) => {
-  const {after, hook, index} = current();
+  const {hook, after, index} = current();
   const stack = getStack(effects, hook);
   if (index < stack.length) {
     const info = stack[index];

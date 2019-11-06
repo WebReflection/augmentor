@@ -19,15 +19,10 @@ var augmentor = (function (exports) {
       var prev = curr;
       var after = [];
       var i = 0;
-
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
       curr = {
-        after: after,
-        args: args,
         hook: hook,
+        after: after,
+        args: arguments,
 
         get index() {
           return i++;
@@ -36,7 +31,7 @@ var augmentor = (function (exports) {
       };
 
       try {
-        return fn.apply(null, args);
+        return fn.apply(null, arguments);
       } finally {
         curr = prev;
         after.forEach(invoke);
@@ -110,8 +105,8 @@ var augmentor = (function (exports) {
   var createEffect = function createEffect(sync) {
     return function (effect, guards) {
       var _current = current(),
-          after = _current.after,
           hook = _current.hook,
+          after = _current.after,
           index = _current.index;
 
       var stack = getStack(effects, hook);

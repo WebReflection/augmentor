@@ -5,12 +5,12 @@ const set = (wm, hook, stack) => (wm.set(hook, stack), stack);
 
 export const current = () => curr;
 
-export const augmentor = fn => function hook(...args) {
+export const augmentor = fn => function hook() {
   const prev = curr;
   const after = [];
   let i = 0;
-  curr = {after, args, hook, get index() { return i++; }};
-  try { return fn.apply(null, args); }
+  curr = {hook, after, args: arguments, get index() { return i++; }};
+  try { return fn.apply(null, arguments); }
   finally {
     curr = prev;
     after.forEach(invoke);
