@@ -237,7 +237,7 @@ var augmentor = (function (exports) {
         update = _useState2[1];
 
     return [state, function (value) {
-      update(reducer(value));
+      update(reducer(state, value));
     }];
   };
 

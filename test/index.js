@@ -38,7 +38,7 @@ setTimeout(() => {
       return ref;
     });
 
-    const reducer = Reducer(Number, 0, {});
+    const reducer = Reducer((state, value) => value, 0, {});
     reducer.increment();
     setTimeout(() => {
       console.assert(reducer.state === 1, 'reducer.increment()');
@@ -49,7 +49,7 @@ setTimeout(() => {
         ref.increment = () => setState(state + 1);
         return ref;
       });
-      const reducerInit = ReducerInit(Number, 0, {});
+      const reducerInit = ReducerInit((state, value) => value, 0, {});
       console.assert(reducerInit.state === 0, 'useReducer init');
       reducerInit.increment();
       setTimeout(() => {
