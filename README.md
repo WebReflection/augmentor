@@ -13,6 +13,7 @@ React like [hooks](https://reactjs.org/docs/hooks-reference.html) for the masses
   * **Basic Hooks**
     * [useState](https://reactjs.org/docs/hooks-reference.html#usestate)
     * [useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect)
+    * [useContext](https://reactjs.org/docs/hooks-reference.html#usecontext), which can be defined via `createContext(value)`
   * **Additional Hooks**
     * [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer)
     * [useCallback](https://reactjs.org/docs/hooks-reference.html#usecallback)

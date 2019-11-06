@@ -100,6 +100,48 @@ var augmentor = (function (exports) {
     }];
   };
 
+  var hooks = new WeakMap();
+
+  var invoke$1 = function invoke(_ref) {
+    var hook = _ref.hook,
+        args = _ref.args;
+    hook.apply(null, args);
+  };
+
+  var createContext = function createContext(value) {
+    var context = {
+      value: value,
+      provide: provide
+    };
+    hooks.set(context, []);
+    return context;
+  };
+  var useContext = function useContext(context) {
+    var _current = current(),
+        hook = _current.hook,
+        args = _current.args;
+
+    var stack = hooks.get(context);
+    var info = {
+      hook: hook,
+      args: args
+    };
+    if (!stack.some(update, info)) stack.push(info);
+    return context.value;
+  };
+
+  function provide(value) {
+    if (this.value !== value) {
+      this.value = value;
+      hooks.get(this).forEach(invoke$1);
+    }
+  }
+
+  function update(_ref2) {
+    var hook = _ref2.hook;
+    return hook === this.hook;
+  }
+
   /*! (c) Andrea Giammarchi - ISC */
   var effects = new WeakMap();
 
@@ -255,8 +297,10 @@ var augmentor = (function (exports) {
   };
 
   exports.augmentor = augmentor;
+  exports.createContext = createContext;
   exports.dropEffect = dropEffect;
   exports.useCallback = useCallback;
+  exports.useContext = useContext;
   exports.useEffect = useEffect;
   exports.useLayoutEffect = useLayoutEffect;
   exports.useMemo = useMemo;

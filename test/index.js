@@ -2,6 +2,7 @@ const {
   augmentor,
   useState,
   useEffect,
+  useContext, createContext,
   useLayoutEffect,
   dropEffect,
   useCallback,
@@ -127,6 +128,21 @@ setTimeout(() => {
             LayoutEffect();
             console.assert(effect === 5, 'useLayoutEffect');
             dropEffect(LayoutEffect);
+            let calls = 0;
+            let num = Math.random();
+            const context = createContext(num);
+            const Context = augmentor(() => {
+              calls++;
+              return useContext(context);
+            });
+            console.assert(Context() === num, 'useContext value');
+            console.assert(calls === 1, '1 call');
+            context.provide(++num);
+            console.assert(calls === 2, '1 call + one provide()');
+            console.assert(Context() === num, 'useContext provide');
+            console.assert(calls === 3, '2 calls + one provide()');
+            context.provide(num);
+            console.assert(calls === 3, 'no calls with same provided value');
           }, 10);
         }, 10);
       }, 10);

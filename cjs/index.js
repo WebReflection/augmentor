@@ -7,6 +7,10 @@
   exports.useState = m.useState;
 })(require('./use-state.js'));
 (m => {
+  exports.createContext = m.createContext;
+  exports.useContext = m.useContext;
+})(require('./use-context.js'));
+(m => {
   exports.useEffect = m.useEffect;
   exports.useLayoutEffect = m.useLayoutEffect;
   exports.dropEffect = m.dropEffect;
