@@ -1,14 +1,13 @@
 'use strict';
 /*! (c) Andrea Giammarchi - ISC */
-const reraf = (require('reraf'));
-const {current, getStack} = require('./utils.js');
 
-const states = new WeakMap;
+const reraf = (require('reraf'));
+const {current} = require('./utils.js');
+
 const updateState = reraf();
 
 const useState = value => {
-  const {hook, args, index} = current();
-  const stack = getStack(states, hook);
+  const {hook, args, stack, index} = current();
   if (stack.length <= index)
     stack[index] = value;
   return [stack[index], value => {

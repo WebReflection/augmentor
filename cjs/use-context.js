@@ -1,4 +1,6 @@
 'use strict';
+/*! (c) Andrea Giammarchi - ISC */
+
 const {current} = require('./utils.js');
 
 const hooks = new WeakMap;

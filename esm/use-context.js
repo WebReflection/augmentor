@@ -1,3 +1,5 @@
+/*! (c) Andrea Giammarchi - ISC */
+
 import {current} from './utils.js';
 
 const hooks = new WeakMap;

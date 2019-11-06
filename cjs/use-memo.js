@@ -1,12 +1,10 @@
 'use strict';
 /*! (c) Andrea Giammarchi - ISC */
-const {current, different, getStack} = require('./utils.js');
 
-const memos = new WeakMap;
+const {current, different} = require('./utils.js');
 
 const useMemo = (memo, guards) => {
-  const {hook, index} = current();
-  const stack = getStack(memos, hook);
+  const {stack, index} = current();
   if (
     !guards ||
     stack.length <= index ||
@@ -16,3 +14,6 @@ const useMemo = (memo, guards) => {
   return stack[index].current;
 };
 exports.useMemo = useMemo;
+
+const useCallback = (fn, guards) => useMemo(() => fn, guards);
+exports.useCallback = useCallback;

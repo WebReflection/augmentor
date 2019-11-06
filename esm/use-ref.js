@@ -1,11 +1,9 @@
 /*! (c) Andrea Giammarchi - ISC */
-import {current, getStack} from './utils.js';
 
-const refs = new WeakMap;
+import {current} from './utils.js';
 
 export const useRef = value => {
-  const {hook, index} = current();
-  const stack = getStack(refs, hook);
+  const {stack, index} = current();
   return index < stack.length ?
           stack[index] :
           (stack[index] = {current: value});

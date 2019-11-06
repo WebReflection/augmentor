@@ -8,27 +8,22 @@ var augmentor = (function (exports) {
     fn();
   };
 
-  var set = function set(wm, hook, stack) {
-    return wm.set(hook, stack), stack;
-  };
-
-  var current = function current() {
-    return curr;
-  };
   var augmentor = function augmentor(fn) {
+    var stack = [];
     return function hook() {
       var prev = curr;
       var after = [];
       var i = 0;
       curr = {
         hook: hook,
-        after: after,
         args: arguments,
+        stack: stack,
 
         get index() {
           return i++;
-        }
+        },
 
+        after: after
       };
 
       try {
@@ -39,8 +34,8 @@ var augmentor = (function (exports) {
       }
     };
   };
-  var getStack = function getStack(wm, hook) {
-    return wm.get(hook) || set(wm, hook, []);
+  var current = function current() {
+    return curr;
   };
   function different(value, i) {
     return value !== this[i];
@@ -84,15 +79,14 @@ var augmentor = (function (exports) {
   }
 
   /*! (c) Andrea Giammarchi - ISC */
-  var states = new WeakMap();
   var updateState = reraf();
   var useState = function useState(value) {
     var _current = current(),
         hook = _current.hook,
         args = _current.args,
+        stack = _current.stack,
         index = _current.index;
 
-    var stack = getStack(states, hook);
     if (stack.length <= index) stack[index] = value;
     return [stack[index], function (value) {
       stack[index] = value;
@@ -100,6 +94,7 @@ var augmentor = (function (exports) {
     }];
   };
 
+  /*! (c) Andrea Giammarchi - ISC */
   var hooks = new WeakMap();
 
   var invoke$1 = function invoke(_ref) {
@@ -151,10 +146,9 @@ var augmentor = (function (exports) {
     return function (effect, guards) {
       var _current = current(),
           hook = _current.hook,
-          after = _current.after,
-          index = _current.index;
-
-      var stack = getStack(effects, hook);
+          stack = _current.stack,
+          index = _current.index,
+          after = _current.after;
 
       if (index < stack.length) {
         var info = stack[index];
@@ -188,6 +182,7 @@ var augmentor = (function (exports) {
           values: guards
         };
         stack[index] = _info;
+        (effects.get(hook) || effects.set(hook, []).get(hook)).push(_info);
         if (sync) after.push(_invoke);else _info.stop = _update(_invoke);
       }
     };
@@ -196,7 +191,7 @@ var augmentor = (function (exports) {
   var useEffect = createEffect(false);
   var useLayoutEffect = createEffect(true);
   var dropEffect = function dropEffect(hook) {
-    getStack(effects, hook).forEach(function (info) {
+    if (effects.has(hook)) effects.get(hook).forEach(function (info) {
       var clean = info.clean,
           stop = info.stop;
       stop();
@@ -209,21 +204,17 @@ var augmentor = (function (exports) {
   };
 
   /*! (c) Andrea Giammarchi - ISC */
-  var memos = new WeakMap();
   var useMemo = function useMemo(memo, guards) {
     var _current = current(),
-        hook = _current.hook,
+        stack = _current.stack,
         index = _current.index;
 
-    var stack = getStack(memos, hook);
     if (!guards || stack.length <= index || guards.some(different, stack[index].values)) stack[index] = {
       current: memo(),
       values: guards
     };
     return stack[index].current;
   };
-
-  /*! (c) Andrea Giammarchi - ISC */
   var useCallback = function useCallback(fn, guards) {
     return useMemo(function () {
       return fn;
@@ -284,13 +275,11 @@ var augmentor = (function (exports) {
   };
 
   /*! (c) Andrea Giammarchi - ISC */
-  var refs = new WeakMap();
   var useRef = function useRef(value) {
     var _current = current(),
-        hook = _current.hook,
+        stack = _current.stack,
         index = _current.index;
 
-    var stack = getStack(refs, hook);
     return index < stack.length ? stack[index] : stack[index] = {
       current: value
     };

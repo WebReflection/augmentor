@@ -1,13 +1,12 @@
 /*! (c) Andrea Giammarchi - ISC */
-import reraf from 'reraf';
-import {current, getStack} from './utils.js';
 
-const states = new WeakMap;
+import reraf from 'reraf';
+import {current} from './utils.js';
+
 const updateState = reraf();
 
 export const useState = value => {
-  const {hook, args, index} = current();
-  const stack = getStack(states, hook);
+  const {hook, args, stack, index} = current();
   if (stack.length <= index)
     stack[index] = value;
   return [stack[index], value => {

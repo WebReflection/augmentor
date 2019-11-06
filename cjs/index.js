@@ -1,5 +1,6 @@
 'use strict';
 /*! (c) Andrea Giammarchi - ISC */
+
 (m => {
   exports.augmentor = m.augmentor;
 })(require('./utils.js'));
@@ -17,10 +18,8 @@
 })(require('./use-effect.js'));
 (m => {
   exports.useMemo = m.useMemo;
-})(require('./use-memo.js'));
-(m => {
   exports.useCallback = m.useCallback;
-})(require('./use-callback.js'));
+})(require('./use-memo.js'));
 (m => {
   exports.useReducer = m.useReducer;
 })(require('./use-reducer.js'));

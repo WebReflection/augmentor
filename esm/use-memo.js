@@ -1,11 +1,9 @@
 /*! (c) Andrea Giammarchi - ISC */
-import {current, different, getStack} from './utils.js';
 
-const memos = new WeakMap;
+import {current, different} from './utils.js';
 
 export const useMemo = (memo, guards) => {
-  const {hook, index} = current();
-  const stack = getStack(memos, hook);
+  const {stack, index} = current();
   if (
     !guards ||
     stack.length <= index ||
@@ -14,3 +12,5 @@ export const useMemo = (memo, guards) => {
     stack[index] = {current: memo(), values: guards};
   return stack[index].current;
 };
+
+export const useCallback = (fn, guards) => useMemo(() => fn, guards);
