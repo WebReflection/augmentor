@@ -1,4 +1,5 @@
 'use strict';
+/*! (c) Andrea Giammarchi - ISC */
 const {current, getStack} = require('./utils.js');
 
 const refs = new WeakMap;

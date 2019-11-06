@@ -1,4 +1,5 @@
 'use strict';
+/*! (c) Andrea Giammarchi - ISC */
 const {current, different, getStack} = require('./utils.js');
 
 const memos = new WeakMap;

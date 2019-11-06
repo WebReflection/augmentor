@@ -1,6 +1,7 @@
 var augmentor = (function (exports) {
   'use strict';
 
+  /*! (c) Andrea Giammarchi - ISC */
   var curr = null;
 
   var invoke = function invoke(fn) {
@@ -82,6 +83,7 @@ var augmentor = (function (exports) {
     }
   }
 
+  /*! (c) Andrea Giammarchi - ISC */
   var states = new WeakMap();
   var updateState = reraf();
   var useState = function useState(value) {
@@ -98,6 +100,7 @@ var augmentor = (function (exports) {
     }];
   };
 
+  /*! (c) Andrea Giammarchi - ISC */
   var effects = new WeakMap();
 
   var stop = function stop() {};
@@ -163,6 +166,7 @@ var augmentor = (function (exports) {
     });
   };
 
+  /*! (c) Andrea Giammarchi - ISC */
   var memos = new WeakMap();
   var useMemo = function useMemo(memo, guards) {
     var _current = current(),
@@ -177,6 +181,7 @@ var augmentor = (function (exports) {
     return stack[index].current;
   };
 
+  /*! (c) Andrea Giammarchi - ISC */
   var useCallback = function useCallback(fn, guards) {
     return useMemo(function () {
       return fn;
@@ -236,6 +241,7 @@ var augmentor = (function (exports) {
     }];
   };
 
+  /*! (c) Andrea Giammarchi - ISC */
   var refs = new WeakMap();
   var useRef = function useRef(value) {
     var _current = current(),

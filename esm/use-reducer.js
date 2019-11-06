@@ -1,3 +1,4 @@
+/*! (c) Andrea Giammarchi - ISC */
 import {useState} from './use-state.js';
 
 export const useReducer = (reducer, value, init) => {

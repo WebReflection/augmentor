@@ -1,4 +1,5 @@
 'use strict';
+/*! (c) Andrea Giammarchi - ISC */
 const reraf = (require('reraf'));
 const {current, different, getStack} = require('./utils.js');
 

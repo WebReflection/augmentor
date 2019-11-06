@@ -1,3 +1,4 @@
+/*! (c) Andrea Giammarchi - ISC */
 import {current, different, getStack} from './utils.js';
 
 const memos = new WeakMap;

@@ -1,4 +1,5 @@
 'use strict';
+/*! (c) Andrea Giammarchi - ISC */
 let curr = null;
 
 const invoke = fn => { fn(); };

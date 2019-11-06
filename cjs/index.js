@@ -1,4 +1,5 @@
 'use strict';
+/*! (c) Andrea Giammarchi - ISC */
 (m => {
   exports.augmentor = m.augmentor;
 })(require('./utils.js'));

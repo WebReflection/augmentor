@@ -1,4 +1,5 @@
 'use strict';
+/*! (c) Andrea Giammarchi - ISC */
 const {useState} = require('./use-state.js');
 
 const useReducer = (reducer, value, init) => {

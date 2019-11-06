@@ -10,7 +10,7 @@
     "cjs": "ascjs esm cjs",
     "clean": "sed -i 's/(m => m.__esModule.*m)//' cjs/{use-state,use-effect}.js",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "min": "uglifyjs index.js -m -c -o min.js",
+    "min": "echo '/*! (c) Andrea Giammarchi - ISC */' > min.js && uglifyjs index.js -c -m >> min.js",
     "size": "cat index.js | wc -c;cat min.js | wc -c;gzip -c9 min.js | wc -c;cat min.js | brotli | wc -c",
     "test": "istanbul cover test/index.js"
   },

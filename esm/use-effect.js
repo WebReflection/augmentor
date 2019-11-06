@@ -1,3 +1,4 @@
+/*! (c) Andrea Giammarchi - ISC */
 import reraf from 'reraf';
 import {current, different, getStack} from './utils.js';
 

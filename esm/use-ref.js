@@ -1,3 +1,4 @@
+/*! (c) Andrea Giammarchi - ISC */
 import {current, getStack} from './utils.js';
 
 const refs = new WeakMap;
