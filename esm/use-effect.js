@@ -24,20 +24,22 @@ const createEffect = sync => (effect, guards) => {
   }
   else {
     const invoke = () => { info.clean = effect(); };
-    const update = reraf();
+    if (!effects.has(hook))
+      effects.set(hook, {stack: [], update: reraf()});
+    const details = effects.get(hook);
     const info = {
       clean: null,
       invoke,
       stop,
-      update,
+      update: details.update,
       values: guards
     };
     stack[index] = info;
-    (effects.get(hook) || effects.set(hook, []).get(hook)).push(info);
+    details.stack.push(info);
     if (sync)
       after.push(invoke);
     else
-      info.stop = update(invoke);
+      info.stop = details.update(invoke);
   }
 };
 
@@ -46,7 +48,7 @@ export const useLayoutEffect = createEffect(true);
 
 export const dropEffect = hook => {
   if (effects.has(hook))
-    effects.get(hook).forEach(info => {
+    effects.get(hook).stack.forEach(info => {
       const {clean, stop} = info;
       stop();
       if (clean) {

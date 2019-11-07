@@ -103,6 +103,7 @@ setTimeout(() => {
         console.assert(effect === 3, 'useEffect');
         dropEffect(SameEffect);
         const CleanEffect = augmentor(() => {
+          useEffect(() => { /* testing multiple effects */ });
           useEffect(() => {
             effect++;
             return () => { effect--; };
