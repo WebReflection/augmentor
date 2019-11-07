@@ -3,14 +3,17 @@
 import reraf from 'reraf';
 import {current} from './utils.js';
 
-const updateState = reraf();
+const updates = new WeakMap;
 
 export const useState = value => {
   const {hook, args, stack, index} = current();
-  if (stack.length <= index)
+  if (stack.length <= index) {
     stack[index] = value;
+    if (!updates.has(hook))
+      updates.set(hook, reraf());
+  }
   return [stack[index], value => {
     stack[index] = value;
-    updateState(hook, null, args);
+    updates.get(hook)(hook, null, args);
   }];
 };

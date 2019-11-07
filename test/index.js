@@ -14,6 +14,8 @@ dropEffect(Object);
 
 const State = augmentor((value, ref) => {
   const [count, setCount] = useState(value);
+  // for coverage purpose
+  useState({});
   ref.count = count;
   ref.increment = () => setCount(count + 1);
   ref.decrement = () => setCount(count - 1);
