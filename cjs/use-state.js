@@ -9,7 +9,7 @@ const updates = new WeakMap;
 const useState = value => {
   const {hook, args, stack, index} = current();
   if (stack.length <= index) {
-    stack[index] = value;
+    stack[index] = typeof value === 'function' ? value() : value;
     if (!updates.has(hook))
       updates.set(hook, reraf());
   }

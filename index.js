@@ -88,7 +88,7 @@ var augmentor = (function (exports) {
         index = _current.index;
 
     if (stack.length <= index) {
-      stack[index] = value;
+      stack[index] = typeof value === 'function' ? value() : value;
       if (!updates.has(hook)) updates.set(hook, reraf());
     }
 
