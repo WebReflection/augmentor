@@ -17,7 +17,7 @@ const State = augmentor((value, ref) => {
   // for coverage purpose
   useState(() => {});
   ref.count = count;
-  ref.increment = () => setCount(count + 1);
+  ref.increment = () => setCount(() => count + 1);
   ref.decrement = () => setCount(count - 1);
   ref.reset = () => setCount(value);
   return ref;

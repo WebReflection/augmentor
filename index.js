@@ -40,6 +40,9 @@ var augmentor = (function (exports) {
   function different(value, i) {
     return value !== this[i];
   }
+  var isFunction = function isFunction(fn) {
+    return typeof fn === 'function';
+  };
 
   var compat = typeof cancelAnimationFrame === 'function';
   var cAF = compat ? cancelAnimationFrame : clearTimeout;
@@ -88,12 +91,12 @@ var augmentor = (function (exports) {
         index = _current.index;
 
     if (stack.length <= index) {
-      stack[index] = typeof value === 'function' ? value() : value;
+      stack[index] = isFunction(value) ? value() : value;
       if (!updates.has(hook)) updates.set(hook, reraf());
     }
 
     return [stack[index], function (value) {
-      stack[index] = value;
+      stack[index] = isFunction(value) ? value(stack[index]) : value;
       updates.get(hook)(hook, null, args);
     }];
   };

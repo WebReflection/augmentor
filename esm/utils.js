@@ -27,3 +27,5 @@ export const current = () => curr;
 export function different(value, i) {
   return value !== this[i];
 };
+
+export const isFunction = fn => typeof fn === 'function';

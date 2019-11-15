@@ -31,3 +31,6 @@ function different(value, i) {
   return value !== this[i];
 }
 exports.different = different;
+
+const isFunction = fn => typeof fn === 'function';
+exports.isFunction = isFunction;
