@@ -10,13 +10,14 @@ const createEffect = sync => (effect, guards) => {
   const {hook, stack, index, after} = current();
   if (index < stack.length) {
     const info = stack[index];
-    const {clean, invoke, update, values} = info;
+    const {clean, update, values} = info;
     if (!guards || guards.some(different, values)) {
       info.values = guards;
       if (clean) {
         info.clean = null;
         clean();
       }
+      const invoke = () => { info.clean = effect(); };
       if (sync)
         after.push(invoke);
       else
@@ -24,19 +25,18 @@ const createEffect = sync => (effect, guards) => {
     }
   }
   else {
-    const invoke = () => { info.clean = effect(); };
     if (!effects.has(hook))
       effects.set(hook, {stack: [], update: reraf()});
     const details = effects.get(hook);
     const info = {
       clean: null,
-      invoke,
       stop,
       update: details.update,
       values: guards
     };
     stack[index] = info;
     details.stack.push(info);
+    const invoke = () => { info.clean = effect(); };
     if (sync)
       after.push(invoke);
     else

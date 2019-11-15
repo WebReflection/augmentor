@@ -157,7 +157,6 @@ var augmentor = (function (exports) {
       if (index < stack.length) {
         var info = stack[index];
         var clean = info.clean,
-            invoke = info.invoke,
             update = info.update,
             values = info.values;
 
@@ -169,13 +168,13 @@ var augmentor = (function (exports) {
             clean();
           }
 
+          var invoke = function invoke() {
+            info.clean = effect();
+          };
+
           if (sync) after.push(invoke);else update(invoke);
         }
       } else {
-        var _invoke = function _invoke() {
-          _info.clean = effect();
-        };
-
         if (!effects.has(hook)) effects.set(hook, {
           stack: [],
           update: reraf()
@@ -183,13 +182,17 @@ var augmentor = (function (exports) {
         var details = effects.get(hook);
         var _info = {
           clean: null,
-          invoke: _invoke,
           stop: stop,
           update: details.update,
           values: guards
         };
         stack[index] = _info;
         details.stack.push(_info);
+
+        var _invoke = function _invoke() {
+          _info.clean = effect();
+        };
+
         if (sync) after.push(_invoke);else _info.stop = details.update(_invoke);
       }
     };
