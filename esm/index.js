@@ -1,6 +1,6 @@
 /*! (c) Andrea Giammarchi - ISC */
 
-export {augmentor} from './utils.js';
+export {augmentor, contextual} from './utils.js';
 export {useState} from './use-state.js';
 export {createContext, useContext} from './use-context.js';
 export {useEffect, useLayoutEffect, dropEffect} from './use-effect.js';

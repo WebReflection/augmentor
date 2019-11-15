@@ -1,5 +1,6 @@
 const {
   augmentor,
+  contextual,
   useState,
   useEffect,
   useContext, createContext,
@@ -11,6 +12,14 @@ const {
 } = require('../cjs');
 
 dropEffect(Object);
+
+let context = null;
+const rando = {};
+contextual(function () {
+  context = this;
+}).call(rando);
+
+console.assert(context === rando);
 
 const State = augmentor((value, ref) => {
   const [count, setCount] = useState(value);

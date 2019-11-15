@@ -24,6 +24,19 @@ const augmentor = fn => {
 };
 exports.augmentor = augmentor;
 
+const contextual = fn => {
+  let context = null;
+  const augmented = augmentor(function () {
+    return fn.apply(context, arguments);
+  });
+  return function () {
+    context = this;
+    try { return augmented.apply(this, arguments); }
+    finally { context = null; }
+  };
+};
+exports.contextual = contextual;
+
 const current = () => curr;
 exports.current = current;
 

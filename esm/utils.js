@@ -22,6 +22,18 @@ export const augmentor = fn => {
   }
 };
 
+export const contextual = fn => {
+  let context = null;
+  const augmented = augmentor(function () {
+    return fn.apply(context, arguments);
+  });
+  return function () {
+    context = this;
+    try { return augmented.apply(this, arguments); }
+    finally { context = null; }
+  };
+};
+
 export const current = () => curr;
 
 export function different(value, i) {

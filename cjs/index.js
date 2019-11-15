@@ -3,6 +3,7 @@
 
 (m => {
   exports.augmentor = m.augmentor;
+  exports.contextual = m.contextual;
 })(require('./utils.js'));
 (m => {
   exports.useState = m.useState;

@@ -34,6 +34,21 @@ var augmentor = (function (exports) {
       }
     };
   };
+  var contextual = function contextual(fn) {
+    var context = null;
+    var augmented = augmentor(function () {
+      return fn.apply(context, arguments);
+    });
+    return function () {
+      context = this;
+
+      try {
+        return augmented.apply(this, arguments);
+      } finally {
+        context = null;
+      }
+    };
+  };
   var current = function current() {
     return curr;
   };
@@ -255,6 +270,7 @@ var augmentor = (function (exports) {
   };
 
   exports.augmentor = augmentor;
+  exports.contextual = contextual;
   exports.createContext = createContext;
   exports.dropEffect = dropEffect;
   exports.useCallback = useCallback;
