@@ -52,3 +52,58 @@ function test() {
   setTimeout(() => setCount(count + 1), 1000);
 }
 ```
+
+## F.A.Q.
+
+<details open>
+  <summary>
+    <strong>Can I pass a context to an augmented function?</strong>
+  </summary>
+  <div>
+While theoretically I could change the library to pass along contexts, it's somehow a footgun to enable multiple contexts for a single augmented stack, so by default you cannot use <code>augmented.call(ctx)</code> or <code>augmented.apply(ctx, [])</code>, 'cause no context is passed along.
+
+If by any chance you've read, and understood, the [related blog post](https://medium.com/@WebReflection/demystifying-hooks-f55ad885609f), you'd realize a single augmented function is indeed not good for prototypes or shared methods, as one context could interfere with any other previous context that used that method before.
+
+```js
+// WRONG: this is a very bad idea, as any MyComp instance
+//        could potentially interfere with other instances
+MyComp.prototype.doThings = augmentor(doThings);
+
+// GOOD: this is how you'd do it 👍
+class MyComp {
+  constructor() {
+    const {doThings} = this;
+    // augment a bound method/function per each instance
+    this.doThings = augmentor(doThings.bind(this));
+  }
+  doThings() {
+    // where actually you do hooky-things
+  }
+}
+```
+
+That being said, if you *really* want to share a context within a single augmented function, meaning that you understand, and know, what you are doing, you can always explicitly work-around this intended limitation:
+
+```js
+const createTextInjector = () => {
+  let self = null;
+  const fn = augmented((text) => {
+    self.textContent = text;
+  });
+  return function () {
+    self = this;
+    return fn.apply(null, arguments);
+  };
+};
+
+const textInjector = createTextInjector();
+
+textInjector.call(div, 'hello');
+textInjector.call(p, 'there!');
+```
+
+Please bear in mind that effects will also refer to the previous context, and not the current one, so you see how easy it is to create troubles in sharing, accepting, or passing, multiple contexts to the same augmented stack?!
+
+As summary, <code>augmentor(method.bind(context))</code> is the best, if not only, way to use a context within an augmented function.
+  </div>
+</details> 
