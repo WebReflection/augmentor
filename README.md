@@ -98,6 +98,6 @@ textInjector.call(p, 'there!');
 
 Please bear in mind that _contextualized_ functions effects will also refer to the previous context, not necessarily the current one, so that you see it's very easy to create troubles sharing, accepting, or passing, multiple contexts to the same augmented stack.
 
-As summary, <code>augmentor(method.bind(context))</code> is the best way to use a context within an augmented function, but <code>contextual</code> can cover other weird edge cases.
+As summary, <code>augmentor(method.bind(context))</code> is the best way to use a context within an augmented function, but <code>contextual</code> can help covering other weird edge cases too.
   </div>
 </details> 
