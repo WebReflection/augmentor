@@ -41,12 +41,7 @@ var augmentor = (function (exports) {
     });
     return function () {
       context = this;
-
-      try {
-        return augmented.apply(this, arguments);
-      } finally {
-        context = null;
-      }
+      return augmented.apply(this, arguments);
     };
   };
   var current = function current() {
