@@ -22,7 +22,7 @@ contextual(function () {
 console.assert(context === rando);
 
 const State = augmentor((value, ref) => {
-  const [count, setCount] = useState(value);
+  const [count, setCount] = useState(value, {sync: true});
   // for coverage purpose
   useState(() => {});
   ref.count = count;
@@ -37,36 +37,34 @@ console.assert(testCounter.count === 0, 'State(0, {})');
 testCounter.increment();
 testCounter.decrement();
 testCounter.increment();
+console.assert(testCounter.count === 1, 'testCounter.methods()');
+testCounter.reset();
 setTimeout(() => {
-  console.assert(testCounter.count === 1, 'testCounter.methods()');
-  testCounter.reset();
-  setTimeout(() => {
-    console.assert(testCounter.count === 0, 'testCounter.reset()');
+  console.assert(testCounter.count === 0, 'testCounter.reset()');
 
-    const Reducer = augmentor((value, reducer, ref) => {
-      const [state, setState] = useReducer(value, reducer);
+  const Reducer = augmentor((value, reducer, ref) => {
+    const [state, setState] = useReducer(value, reducer);
+    ref.state = state;
+    ref.increment = () => setState(state + 1);
+    return ref;
+  });
+
+  const reducer = Reducer((state, value) => value, 0, {});
+  reducer.increment();
+  setTimeout(() => {
+    console.assert(reducer.state === 1, 'reducer.increment()');
+    const init = Number;
+    const ReducerInit = augmentor((value, reducer, ref) => {
+      const [state, setState] = useReducer(value, reducer, init);
       ref.state = state;
       ref.increment = () => setState(state + 1);
       return ref;
     });
-
-    const reducer = Reducer((state, value) => value, 0, {});
-    reducer.increment();
+    const reducerInit = ReducerInit((state, value) => value, 0, {});
+    console.assert(reducerInit.state === 0, 'useReducer init');
+    reducerInit.increment();
     setTimeout(() => {
-      console.assert(reducer.state === 1, 'reducer.increment()');
-      const init = Number;
-      const ReducerInit = augmentor((value, reducer, ref) => {
-        const [state, setState] = useReducer(value, reducer, init);
-        ref.state = state;
-        ref.increment = () => setState(state + 1);
-        return ref;
-      });
-      const reducerInit = ReducerInit((state, value) => value, 0, {});
-      console.assert(reducerInit.state === 0, 'useReducer init');
-      reducerInit.increment();
-      setTimeout(() => {
-        console.assert(reducerInit.state === 1, 'reducerInit.increment()');
-      }, 10);
+      console.assert(reducerInit.state === 1, 'reducerInit.increment()');
     }, 10);
   }, 10);
 }, 10);

@@ -93,7 +93,12 @@ var augmentor = (function (exports) {
 
   /*! (c) Andrea Giammarchi - ISC */
   var updates = new WeakMap();
-  var useState = function useState(value) {
+
+  var update = function update(hook, ctx, args) {
+    hook.apply(ctx, args);
+  };
+
+  var useState = function useState(value, options) {
     var _current = current(),
         hook = _current.hook,
         args = _current.args,
@@ -102,7 +107,7 @@ var augmentor = (function (exports) {
 
     if (stack.length <= index) {
       stack[index] = isFunction(value) ? value() : value;
-      if (!updates.has(hook)) updates.set(hook, reraf());
+      if (!updates.has(hook)) updates.set(hook, options && options.sync ? update : reraf());
     }
 
     return [stack[index], function (value) {
@@ -138,7 +143,7 @@ var augmentor = (function (exports) {
       hook: hook,
       args: args
     };
-    if (!stack.some(update, info)) stack.push(info);
+    if (!stack.some(update$1, info)) stack.push(info);
     return context.value;
   };
 
@@ -149,7 +154,7 @@ var augmentor = (function (exports) {
     }
   }
 
-  function update(_ref2) {
+  function update$1(_ref2) {
     var hook = _ref2.hook;
     return hook === this.hook;
   }
@@ -245,9 +250,10 @@ var augmentor = (function (exports) {
   };
 
   /*! (c) Andrea Giammarchi - ISC */
-  var useReducer = function useReducer(reducer, value, init) {
-    // avoid Babel destructuring bloat
-    var pair = useState(init ? init(value) : value);
+  var useReducer = function useReducer(reducer, value, init, options) {
+    var fn = typeof init === 'function'; // avoid `cons [state, update] = ...` Babel destructuring bloat
+
+    var pair = useState(fn ? init(value) : value, fn ? options : init);
     return [pair[0], function (value) {
       pair[1](reducer(pair[0], value));
     }];
