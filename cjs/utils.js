@@ -2,23 +2,22 @@
 /*! (c) Andrea Giammarchi - ISC */
 
 let curr = null;
-const invoke = fn => { fn(); };
 
 const augmentor = fn => {
   const stack = [];
   return function hook() {
     const prev = curr;
     const after = [];
-    let i = 0;
     curr = {
       hook, args: arguments,
-      stack, get index() { return i++; },
+      stack, i: 0,
       after
     };
     try { return fn.apply(null, arguments); }
     finally {
       curr = prev;
-      after.forEach(invoke);
+      for (let i = 0, {length} = after; i < length; i++)
+        after[i]();
     }
   }
 };

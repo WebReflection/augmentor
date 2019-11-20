@@ -4,14 +4,16 @@
 const {current, different} = require('./utils.js');
 
 const useMemo = (memo, guards) => {
-  const {stack, index} = current();
+  const state = current();
+  const i = state.i++;
+  const {stack} = state;
   if (
     !guards ||
-    stack.length <= index ||
-    guards.some(different, stack[index].values)
+    stack.length <= i ||
+    guards.some(different, stack[i].values)
   )
-    stack[index] = {current: memo(), values: guards};
-  return stack[index].current;
+    stack[i] = {current: memo(), values: guards};
+  return stack[i].current;
 };
 exports.useMemo = useMemo;
 

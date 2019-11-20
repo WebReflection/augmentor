@@ -6,9 +6,11 @@ const effects = new WeakMap;
 const stop = () => {};
 
 const createEffect = sync => (effect, guards) => {
-  const {hook, stack, index, after} = current();
-  if (index < stack.length) {
-    const info = stack[index];
+  const state = current();
+  const i = state.i++;
+  const {hook, stack, after} = state;
+  if (i < stack.length) {
+    const info = stack[i];
     const {clean, update, values} = info;
     if (!guards || guards.some(different, values)) {
       info.values = guards;
@@ -33,7 +35,7 @@ const createEffect = sync => (effect, guards) => {
       update: details.update,
       values: guards
     };
-    stack[index] = info;
+    stack[i] = info;
     details.stack.push(info);
     const invoke = () => { info.clean = effect(); };
     if (sync)
