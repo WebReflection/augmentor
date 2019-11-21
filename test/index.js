@@ -24,11 +24,12 @@ console.assert(context === rando);
 const State = augmentor((value, ref) => {
   const [count, setCount] = useState(value, {sync: true});
   // for coverage purpose
-  useState(() => {});
+  const [one, setOne] = useState(() => 1);
   ref.count = count;
   ref.increment = () => setCount(() => count + 1);
   ref.decrement = () => setCount(count - 1);
   ref.reset = () => setCount(value);
+  setOne(1);
   return ref;
 });
 

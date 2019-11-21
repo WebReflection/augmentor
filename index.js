@@ -91,6 +91,10 @@ var augmentor = (function (exports) {
     hook.apply(ctx, args);
   };
 
+  var defaults = {
+    sync: false,
+    always: false
+  };
   var useState = function useState(value, options) {
     var state = current();
     var i = state.i++;
@@ -98,14 +102,22 @@ var augmentor = (function (exports) {
         args = state.args,
         stack = state.stack;
 
+    var _ref = options || defaults,
+        sync = _ref.sync,
+        always = _ref.always;
+
     if (stack.length <= i) {
       stack[i] = isFunction(value) ? value() : value;
-      if (!updates.has(hook)) updates.set(hook, options && options.sync ? update : reraf());
+      if (!updates.has(hook)) updates.set(hook, sync ? update : reraf());
     }
 
     return [stack[i], function (value) {
-      stack[i] = isFunction(value) ? value(stack[i]) : value;
-      updates.get(hook)(hook, null, args);
+      var newValue = isFunction(value) ? value(stack[i]) : value;
+
+      if (always || stack[i] !== newValue) {
+        stack[i] = newValue;
+        updates.get(hook)(hook, null, args);
+      }
     }];
   };
 

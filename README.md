@@ -11,11 +11,11 @@ React like [hooks](https://reactjs.org/docs/hooks-reference.html) for the masses
 ## Available Hooks
 
   * **Basic Hooks**
-    * [useState](https://reactjs.org/docs/hooks-reference.html#usestate), with optional `{sync: true}` second parameter to force sync updates, _async_ by default.
+    * [useState](https://reactjs.org/docs/hooks-reference.html#usestate), with optional `{sync: true, always: true}` second parameter to force sync updates, _async_ by default, and always call the hook, even if the state is the same, _false_ by default.
     * [useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect)
     * [useContext](https://reactjs.org/docs/hooks-reference.html#usecontext), which can be defined via `createContext(value)`
   * **Additional Hooks**
-    * [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer), with optional `{sync: true}` last parameter to force sync updates, _async_ by default.
+    * [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer), with optional `{sync: true, always: true}` second parameter to force sync updates, _async_ by default, and always call the hook, even if the state is the same, _false_ by default.
     * [useCallback](https://reactjs.org/docs/hooks-reference.html#usecallback)
     * [useMemo](https://reactjs.org/docs/hooks-reference.html#usememo)
     * [useRef](https://reactjs.org/docs/hooks-reference.html#useref)
