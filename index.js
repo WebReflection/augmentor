@@ -92,7 +92,7 @@ var augmentor = (function (exports) {
   };
 
   var defaults = {
-    sync: false,
+    async: false,
     always: false
   };
   var useState = function useState(value, options) {
@@ -103,12 +103,12 @@ var augmentor = (function (exports) {
         stack = state.stack;
 
     var _ref = options || defaults,
-        sync = _ref.sync,
+        asy = _ref.async,
         always = _ref.always;
 
     if (stack.length <= i) {
       stack[i] = isFunction(value) ? value() : value;
-      if (!updates.has(hook)) updates.set(hook, sync ? update : reraf());
+      if (!updates.has(hook)) updates.set(hook, asy ? reraf() : update);
     }
 
     return [stack[i], function (value) {

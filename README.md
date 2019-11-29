@@ -8,14 +8,22 @@ React like [hooks](https://reactjs.org/docs/hooks-reference.html) for the masses
 
 
 
+#### V2 Breaking change
+
+Both `useState` and `useReducer` are now synchronous by default. If you invoke multiple state changes at once, you can opt into asynchronous execution via the optional argument `{async: true}`.
+
+This change was made to keep _augmentor_ defaults similar to what developers coming from other hooks based libraries expect.
+
+
+
 ## Available Hooks
 
   * **Basic Hooks**
-    * [useState](https://reactjs.org/docs/hooks-reference.html#usestate), with optional `{sync: true, always: true}` second parameter to force sync updates, _async_ by default, and always call the hook, even if the state is the same, _false_ by default.
+    * [useState](https://reactjs.org/docs/hooks-reference.html#usestate), with optional `{async: true, always: true}` second parameter to use deferred updates, _sync_ by default, and always call the hook, even if the state is the same, _false_ by default.
     * [useEffect](https://reactjs.org/docs/hooks-reference.html#useeffect)
     * [useContext](https://reactjs.org/docs/hooks-reference.html#usecontext), which can be defined via `createContext(value)`
   * **Additional Hooks**
-    * [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer), with optional `{sync: true, always: true}` second parameter to force sync updates, _async_ by default, and always call the hook, even if the state is the same, _false_ by default.
+    * [useReducer](https://reactjs.org/docs/hooks-reference.html#usereducer), with optional `{async: true, always: true}` third parameter to use deferred updates, _sync_ by default, and always call the hook, even if the state is the same, _false_ by default.
     * [useCallback](https://reactjs.org/docs/hooks-reference.html#usecallback)
     * [useMemo](https://reactjs.org/docs/hooks-reference.html#usememo)
     * [useRef](https://reactjs.org/docs/hooks-reference.html#useref)

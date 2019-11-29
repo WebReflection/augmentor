@@ -22,7 +22,7 @@ contextual(function () {
 console.assert(context === rando);
 
 const State = augmentor((value, ref) => {
-  const [count, setCount] = useState(value, {sync: true});
+  const [count, setCount] = useState(value);
   // for coverage purpose
   const [one, setOne] = useState(() => 1);
   ref.count = count;
@@ -44,7 +44,7 @@ setTimeout(() => {
   console.assert(testCounter.count === 0, 'testCounter.reset()');
 
   const Reducer = augmentor((value, reducer, ref) => {
-    const [state, setState] = useReducer(value, reducer);
+    const [state, setState] = useReducer(value, reducer, {async: true});
     ref.state = state;
     ref.increment = () => setState(state + 1);
     return ref;
