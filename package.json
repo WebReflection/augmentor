@@ -1,6 +1,6 @@
 {
   "name": "augmentor",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React like hooks for the masses",
   "module": "esm/index.js",
   "main": "cjs/index.js",
