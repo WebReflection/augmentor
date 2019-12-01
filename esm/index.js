@@ -115,6 +115,7 @@ const setFX = hook => {
 
 const createEffect = sync => (effect, guards) => {
   const {hook, after, stack, i, length} = state;
+  state.i++;
   if (i < length) {
     const info = stack[i];
     const {clean, update, values} = info;
@@ -140,7 +141,6 @@ const createEffect = sync => (effect, guards) => {
       values: guards
     };
     state.length = stack.push(info);
-    state.i++;
     details.stack.push(info);
     const invoke = () => { info.clean = effect(); };
     if (sync)

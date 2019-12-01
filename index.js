@@ -193,6 +193,7 @@ var augmentor = (function (exports) {
           stack = _state3.stack,
           i = _state3.i,
           length = _state3.length;
+      state.i++;
 
       if (i < length) {
         var info = stack[i];
@@ -223,7 +224,6 @@ var augmentor = (function (exports) {
           values: guards
         };
         state.length = stack.push(_info);
-        state.i++;
         details.stack.push(_info);
 
         var _invoke2 = function _invoke2() {
