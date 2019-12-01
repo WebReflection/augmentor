@@ -4,7 +4,7 @@ import babel from 'rollup-plugin-babel';
 export default {
   input: 'esm/index.js',
   plugins: [
-    resolve({module: true}),
+    resolve(),
     babel({presets: ["@babel/preset-env"]})
   ],
   context: 'null',
