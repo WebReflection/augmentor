@@ -29,6 +29,7 @@ This change was made to keep _augmentor_ defaults similar to what developers com
     * [useRef](https://reactjs.org/docs/hooks-reference.html#useref)
     * [useLayoutEffect](https://reactjs.org/docs/hooks-reference.html#uselayouteffect)
   * **Third parts exported utilities**
+    * `hasEffect(augmentedCallback)` returns true if `augmentedCallback` used some effect
     * `dropEffect(augmentedCallback)` executes any cleanup left from last `useEffect(...)` invocation
 
 

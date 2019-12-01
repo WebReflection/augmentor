@@ -5,7 +5,7 @@ const {
   useEffect,
   useContext, createContext,
   useLayoutEffect,
-  dropEffect,
+  dropEffect, hasEffect,
   useCallback,
   useReducer,
   useRef
@@ -127,6 +127,7 @@ setTimeout(() => {
           CleanEffect();
           setTimeout(() => {
             console.assert(effect === 4, 'useEffect => no drop clean');
+            console.assert(hasEffect(CleanEffect), 'hasEffect => was present');
             dropEffect(CleanEffect);
             console.assert(effect === 3, 'useEffect => dropped clean');
             const LayoutEffect = augmentor(() => {

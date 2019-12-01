@@ -249,7 +249,8 @@ var augmentor = (function (exports) {
         clean();
       }
     });
-  }; // useMemo, useCallback
+  };
+  var hasEffect = effects.has.bind(effects); // useMemo, useCallback
 
   var useMemo = function useMemo(memo, guards) {
     var _state4 = state,
@@ -290,6 +291,7 @@ var augmentor = (function (exports) {
   exports.contextual = contextual;
   exports.createContext = createContext;
   exports.dropEffect = dropEffect;
+  exports.hasEffect = hasEffect;
   exports.useCallback = useCallback;
   exports.useContext = useContext;
   exports.useEffect = useEffect;

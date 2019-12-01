@@ -166,6 +166,8 @@ export const dropEffect = hook => {
     });
 };
 
+export const hasEffect = effects.has.bind(effects);
+
 // useMemo, useCallback
 export const useMemo = (memo, guards) => {
   const {stack, i, length} = state;

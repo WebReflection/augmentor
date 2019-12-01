@@ -176,6 +176,9 @@ const dropEffect = hook => {
 };
 exports.dropEffect = dropEffect;
 
+const hasEffect = effects.has.bind(effects);
+exports.hasEffect = hasEffect;
+
 // useMemo, useCallback
 const useMemo = (memo, guards) => {
   const {stack, i, length} = state;
