@@ -108,9 +108,9 @@ function update({hook}) {
 const effects = new WeakMap;
 const stop = () => {};
 const setFX = hook => {
-  const details = {stack: [], update: reraf()};
-  effects.set(hook, details);
-  return details;
+  const stack = [];
+  effects.set(hook, stack);
+  return stack;
 };
 
 const createEffect = sync => (effect, guards) => {
@@ -133,20 +133,20 @@ const createEffect = sync => (effect, guards) => {
     }
   }
   else {
-    const details = effects.get(hook) || setFX(hook);
+    const update = sync ? stop : reraf();
     const info = {
       clean: null,
       stop,
-      update: details.update,
+      update,
       values: guards
     };
     state.length = stack.push(info);
-    details.stack.push(info);
+    (effects.get(hook) || setFX(hook)).push(info);
     const invoke = () => { info.clean = effect(); };
     if (sync)
       after.push(invoke);
     else
-      info.stop = details.update(invoke);
+      info.stop = update(invoke);
   }
 };
 
@@ -154,16 +154,14 @@ export const useEffect = createEffect(false);
 export const useLayoutEffect = createEffect(true);
 
 export const dropEffect = hook => {
-  const fx = effects.get(hook);
-  if (fx)
-    fx.stack.forEach(info => {
-      const {clean, stop} = info;
-      stop();
-      if (clean) {
-        info.clean = null;
-        clean();
-      }
-    });
+  (effects.get(hook) || []).forEach(info => {
+    const {clean, stop} = info;
+    stop();
+    if (clean) {
+      info.clean = null;
+      clean();
+    }
+  });
 };
 
 export const hasEffect = effects.has.bind(effects);

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../index.js"></script>
+  <script>
+this.onload = () => {
+  const {augmentor: $, useEffect, useRef, useState} = augmentor;
+
+  // Some hook that sets state when some external callback fires
+  const usePlus = () => {
+    const [ state, setState ] = useState(0);
+    const result = useRef(state);
+    useEffect( () => {
+      console.log("plus effect");
+      const handler = () => setState(++result.current);
+      document.querySelector(".plus").addEventListener("click", handler);
+      return () => {
+        console.log("plus cleanup");
+        document.querySelector(".plus").removeEventListener("click", handler);
+      };
+    }, []);
+    return state;
+  };
+
+  // The same as usePlus() above
+  const useMinus = () => {
+    const [ state, setState ] = useState(0); 
+    const result = useRef(state);
+    useEffect( () => {
+      console.log("minus effect");
+      const handler = () => setState(++result.current);
+      document.querySelector(".minus").addEventListener("click", handler);
+      return () => {
+        console.log("minus cleanup");
+        document.querySelector(".minus").removeEventListener("click", handler);
+      };
+    }, []);
+    return state;
+  };
+
+  const Content = $(() => {
+    const plus = usePlus();   // this has no effect
+    const minus = useMinus(); // this works
+    const {current: div} = useRef(document.createElement('div'));
+    div.textContent = `+${ plus } / -${ minus } (${ plus - minus })`;
+    return div;
+  });
+
+  document.querySelector(".result").appendChild(Content());
+};
+  </script>
+</head>
+<body>
+  <button class="plus">+</button>
+  <button class="minus">-</button>
+  <div class="result"></div>
+</body>
+</html>
