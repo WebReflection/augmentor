@@ -169,7 +169,7 @@ var augmentor = (function (exports) {
   function update(_ref3) {
     var hook = _ref3.hook;
     return hook === this.hook;
-  } // useEffect, useLayoutEffect, dropEffect
+  } // dropEffect, hasEffect, useEffect, useLayoutEffect
 
 
   var effects = new WeakMap();
@@ -217,9 +217,9 @@ var augmentor = (function (exports) {
 
         var _info = {
           clean: null,
-          stop: stop,
           update: _update2,
-          values: guards
+          values: guards,
+          stop: stop
         };
         state.length = stack.push(_info);
         (effects.get(hook) || setFX(hook)).push(_info);
@@ -233,8 +233,6 @@ var augmentor = (function (exports) {
     };
   };
 
-  var useEffect = createEffect(false);
-  var useLayoutEffect = createEffect(true);
   var dropEffect = function dropEffect(hook) {
     (effects.get(hook) || []).forEach(function (info) {
       var clean = info.clean,
@@ -247,7 +245,9 @@ var augmentor = (function (exports) {
       }
     });
   };
-  var hasEffect = effects.has.bind(effects); // useMemo, useCallback
+  var hasEffect = effects.has.bind(effects);
+  var useEffect = createEffect(false);
+  var useLayoutEffect = createEffect(true); // useMemo, useCallback
 
   var useMemo = function useMemo(memo, guards) {
     var _state4 = state,

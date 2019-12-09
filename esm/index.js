@@ -104,7 +104,7 @@ function update({hook}) {
   return hook === this.hook;
 }
 
-// useEffect, useLayoutEffect, dropEffect
+// dropEffect, hasEffect, useEffect, useLayoutEffect
 const effects = new WeakMap;
 const stop = () => {};
 const setFX = hook => {
@@ -134,12 +134,7 @@ const createEffect = sync => (effect, guards) => {
   }
   else {
     const update = sync ? stop : reraf();
-    const info = {
-      clean: null,
-      stop,
-      update,
-      values: guards
-    };
+    const info = {clean: null, update, values: guards, stop};
     state.length = stack.push(info);
     (effects.get(hook) || setFX(hook)).push(info);
     const invoke = () => { info.clean = effect(); };
@@ -149,9 +144,6 @@ const createEffect = sync => (effect, guards) => {
       info.stop = update(invoke);
   }
 };
-
-export const useEffect = createEffect(false);
-export const useLayoutEffect = createEffect(true);
 
 export const dropEffect = hook => {
   (effects.get(hook) || []).forEach(info => {
@@ -165,6 +157,10 @@ export const dropEffect = hook => {
 };
 
 export const hasEffect = effects.has.bind(effects);
+
+export const useEffect = createEffect(false);
+
+export const useLayoutEffect = createEffect(true);
 
 // useMemo, useCallback
 export const useMemo = (memo, guards) => {
