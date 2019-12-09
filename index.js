@@ -94,11 +94,11 @@ var augmentor = (function (exports) {
     always: false
   };
   var useState = function useState(value, options) {
+    var i = state.i++;
     var _state = state,
         hook = _state.hook,
         args = _state.args,
         stack = _state.stack,
-        i = _state.i,
         length = _state.length;
 
     var _ref = options || defaults,
@@ -109,7 +109,7 @@ var augmentor = (function (exports) {
       $: typeof value === 'function' ? value() : value,
       _: asy ? updates.get(hook) || setRaf(hook) : hookdate
     });
-    var ref = stack[state.i++];
+    var ref = stack[i];
     return [ref.$, function (value) {
       var $value = typeof value === 'function' ? value(ref.$) : value;
 
@@ -184,13 +184,12 @@ var augmentor = (function (exports) {
 
   var createEffect = function createEffect(sync) {
     return function (effect, guards) {
+      var i = state.i++;
       var _state3 = state,
           hook = _state3.hook,
           after = _state3.after,
           stack = _state3.stack,
-          i = _state3.i,
           length = _state3.length;
-      state.i++;
 
       if (i < length) {
         var info = stack[i];
@@ -250,9 +249,9 @@ var augmentor = (function (exports) {
   var useLayoutEffect = createEffect(true); // useMemo, useCallback
 
   var useMemo = function useMemo(memo, guards) {
+    var i = state.i++;
     var _state4 = state,
         stack = _state4.stack,
-        i = _state4.i,
         length = _state4.length;
     if (i === length) state.length = stack.push({
       $: memo(),
@@ -261,7 +260,7 @@ var augmentor = (function (exports) {
       $: memo(),
       _: guards
     };
-    return stack[state.i++].$;
+    return stack[i].$;
   };
   var useCallback = function useCallback(fn, guards) {
     return useMemo(function () {
@@ -270,14 +269,14 @@ var augmentor = (function (exports) {
   }; // useRef
 
   var useRef = function useRef(value) {
+    var i = state.i++;
     var _state5 = state,
         stack = _state5.stack,
-        i = _state5.i,
         length = _state5.length;
     if (i === length) state.length = stack.push({
       current: value
     });
-    return stack[state.i++];
+    return stack[i];
   };
 
   function different(value, i) {

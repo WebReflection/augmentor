@@ -11,6 +11,8 @@ const {
   useRef
 } = require('../cjs');
 
+console.time('augmentor');
+
 dropEffect(Object);
 
 let context = null;
@@ -155,6 +157,7 @@ setTimeout(() => {
             console.assert(calls === 3, '2 calls + one provide()');
             context.provide(num);
             console.assert(calls === 3, 'no calls with same provided value');
+            console.timeEnd('augmentor');
           }, 10);
         }, 10);
       }, 10);

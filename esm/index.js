@@ -47,14 +47,15 @@ const hookdate = (hook, ctx, args) => { hook.apply(ctx, args); };
 const defaults = {async: false, always: false};
 
 export const useState = (value, options) => {
-  const {hook, args, stack, i, length} = state;
+  const i = state.i++;
+  const {hook, args, stack, length} = state;
   const {async: asy, always} = (options || defaults);
   if (i === length)
     state.length = stack.push({
       $: typeof value === 'function' ? value() : value,
       _: asy ? (updates.get(hook) || setRaf(hook)) : hookdate
     });
-  const ref = stack[state.i++];
+  const ref = stack[i];
   return [ref.$, value => {
     const $value = typeof value === 'function' ? value(ref.$) : value;
     if (always || (ref.$ !== $value)) {
@@ -114,8 +115,8 @@ const setFX = hook => {
 };
 
 const createEffect = sync => (effect, guards) => {
-  const {hook, after, stack, i, length} = state;
-  state.i++;
+  const i = state.i++;
+  const {hook, after, stack, length} = state;
   if (i < length) {
     const info = stack[i];
     const {clean, update, values} = info;
@@ -164,22 +165,24 @@ export const useLayoutEffect = createEffect(true);
 
 // useMemo, useCallback
 export const useMemo = (memo, guards) => {
-  const {stack, i, length} = state;
+  const i = state.i++;
+  const {stack, length} = state;
   if (i === length)
     state.length = stack.push({$: memo(), _: guards});
   else if (!guards || guards.some(different, stack[i]._))
     stack[i] = {$: memo(), _: guards};
-  return stack[state.i++].$;
+  return stack[i].$;
 };
 
 export const useCallback = (fn, guards) => useMemo(() => fn, guards);
 
 // useRef
 export const useRef = value => {
-  const {stack, i, length} = state;
+  const i = state.i++;
+  const {stack, length} = state;
   if (i === length)
     state.length = stack.push({current: value});
-  return stack[state.i++];
+  return stack[i];
 };
 
 function different(value, i) {
