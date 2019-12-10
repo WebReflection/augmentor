@@ -30,8 +30,7 @@ export const contextual = fn => {
     return fn.apply(context, arguments);
   });
   return function () {
-    context = this;
-    return augmented.apply(this, arguments);
+    return augmented.apply((context = this), arguments);
   };
 };
 
