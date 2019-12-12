@@ -23,6 +23,16 @@ contextual(function () {
 
 console.assert(context === rando);
 
+let fi = 0;
+const f = augmentor(() => useEffect(() => { fi++; }));
+f();
+f();
+f();
+console.assert(fi === 2, 'effect is force-triggered');
+setTimeout(() => {
+  console.assert(fi === 3, 'last effect also triggered');
+}, 20);
+
 const State = augmentor((value, ref) => {
   const [count, setCount] = useState(value);
   // for coverage purpose

@@ -181,7 +181,7 @@ var augmentor = (function (exports) {
     return stack;
   };
 
-  var createEffect = function createEffect(sync) {
+  var createEffect = function createEffect(asy) {
     return function (effect, guards) {
       var i = state.i++;
       var _state3 = state,
@@ -192,12 +192,14 @@ var augmentor = (function (exports) {
 
       if (i < length) {
         var info = stack[i];
-        var clean = info.clean,
-            _update = info.update,
-            values = info.values;
+        var _update = info.update,
+            values = info.values,
+            _stop = info.stop;
 
         if (!guards || guards.some(different, values)) {
           info.values = guards;
+          if (asy) _stop(asy);
+          var clean = info.clean;
 
           if (clean) {
             info.clean = null;
@@ -208,10 +210,10 @@ var augmentor = (function (exports) {
             info.clean = effect();
           };
 
-          if (sync) after.push(_invoke);else _update(_invoke);
+          if (asy) _update(_invoke);else after.push(_invoke);
         }
       } else {
-        var _update2 = sync ? stop : reraf();
+        var _update2 = asy ? reraf() : stop;
 
         var _info = {
           clean: null,
@@ -226,7 +228,7 @@ var augmentor = (function (exports) {
           _info.clean = effect();
         };
 
-        if (sync) after.push(_invoke2);else _info.stop = _update2(_invoke2);
+        if (asy) _info.stop = _update2(_invoke2);else after.push(_invoke2);
       }
     };
   };
@@ -244,8 +246,8 @@ var augmentor = (function (exports) {
     });
   };
   var hasEffect = effects.has.bind(effects);
-  var useEffect = createEffect(false);
-  var useLayoutEffect = createEffect(true); // useMemo, useCallback
+  var useEffect = createEffect(true);
+  var useLayoutEffect = createEffect(false); // useMemo, useCallback
 
   var useMemo = function useMemo(memo, guards) {
     var i = state.i++;

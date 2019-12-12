@@ -113,35 +113,38 @@ const setFX = hook => {
   return stack;
 };
 
-const createEffect = sync => (effect, guards) => {
+const createEffect = asy => (effect, guards) => {
   const i = state.i++;
   const {hook, after, stack, length} = state;
   if (i < length) {
     const info = stack[i];
-    const {clean, update, values} = info;
+    const {update, values, stop} = info;
     if (!guards || guards.some(different, values)) {
       info.values = guards;
+      if (asy)
+        stop(asy);
+      const {clean} = info;
       if (clean) {
         info.clean = null;
         clean();
       }
       const invoke = () => { info.clean = effect(); };
-      if (sync)
-        after.push(invoke);
-      else
+      if (asy)
         update(invoke);
+      else
+        after.push(invoke);
     }
   }
   else {
-    const update = sync ? stop : reraf();
+    const update = asy ? reraf() : stop;
     const info = {clean: null, update, values: guards, stop};
     state.length = stack.push(info);
     (effects.get(hook) || setFX(hook)).push(info);
     const invoke = () => { info.clean = effect(); };
-    if (sync)
-      after.push(invoke);
-    else
+    if (asy)
       info.stop = update(invoke);
+    else
+      after.push(invoke);
   }
 };
 
@@ -158,9 +161,9 @@ export const dropEffect = hook => {
 
 export const hasEffect = effects.has.bind(effects);
 
-export const useEffect = createEffect(false);
+export const useEffect = createEffect(true);
 
-export const useLayoutEffect = createEffect(true);
+export const useLayoutEffect = createEffect(false);
 
 // useMemo, useCallback
 export const useMemo = (memo, guards) => {
