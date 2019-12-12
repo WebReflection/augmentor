@@ -32,10 +32,10 @@
     "ascjs": "^3.1.2",
     "coveralls": "^3.0.9",
     "istanbul": "^0.4.5",
-    "rollup": "^1.27.9",
+    "rollup": "^1.27.11",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "uglify-js": "^3.7.1"
+    "uglify-js": "^3.7.2"
   },
   "dependencies": {
     "reraf": "^1.1.1"
