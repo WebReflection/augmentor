@@ -25,12 +25,21 @@ export const augmentor = fn => {
 };
 
 export const contextual = fn => {
+  let check = true;
   let context = null;
   const augmented = augmentor(function () {
     return fn.apply(context, arguments);
   });
-  return function () {
-    return augmented.apply((context = this), arguments);
+  return function hook() {
+    const result = augmented.apply((context = this), arguments);
+    // perform hasEffect check only once
+    if (check) {
+      check = !check;
+      // and copy same Array if any FX was used
+      if (hasEffect(augmented))
+        effects.set(hook, effects.get(augmented));
+    }
+    return result;
   };
 };
 

@@ -168,6 +168,19 @@ setTimeout(() => {
             context.provide(num);
             console.assert(calls === 3, 'no calls with same provided value');
             console.timeEnd('augmentor');
+            let ctxCall = false;
+            let f = contextual(() => {
+              useEffect(() => {
+                return () => {
+                  ctxCall = true;
+                };
+              });
+            });
+            f();
+            dropEffect(f);
+            f();
+            dropEffect(f);
+            console.assert(ctxCall === true, 'contextual can be dropped too');
           }, 10);
         }, 10);
       }, 10);
