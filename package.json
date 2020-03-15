@@ -27,17 +27,18 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
     "ascjs": "^3.1.2",
     "coveralls": "^3.0.9",
     "istanbul": "^0.4.5",
-    "rollup": "^1.28.0",
-    "rollup-plugin-babel": "^4.3.3",
+    "rollup": "^2.0.6",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "uglify-js": "^3.7.4"
+    "uglify-js": "^3.8.0"
   },
   "dependencies": {
-    "reraf": "^1.1.1"
+    "reraf": "^1.1.1",
+    "umap": "^1.0.2"
   }
 }

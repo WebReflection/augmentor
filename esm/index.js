@@ -1,6 +1,7 @@
 /*! (c) Andrea Giammarchi - ISC */
 
 import reraf from 'reraf';
+import umap from 'umap';
 
 let state = null;
 
@@ -44,12 +45,7 @@ export const contextual = fn => {
 };
 
 // useState
-const updates = new WeakMap;
-const setRaf = hook => {
-  const update = reraf();
-  updates.set(hook, update);
-  return update;
-};
+const updates = umap(new WeakMap);
 
 const hookdate = (hook, ctx, args) => { hook.apply(ctx, args); };
 const defaults = {async: false, always: false};
@@ -61,7 +57,7 @@ export const useState = (value, options) => {
   if (i === length)
     state.length = stack.push({
       $: typeof value === 'function' ? value() : value,
-      _: asy ? (updates.get(hook) || setRaf(hook)) : hookdate
+      _: asy ? (updates.get(hook) || updates.set(hook, reraf())) : hookdate
     });
   const ref = stack[i];
   return [ref.$, value => {
@@ -115,12 +111,8 @@ function update({hook}) {
 
 // dropEffect, hasEffect, useEffect, useLayoutEffect
 const effects = new WeakMap;
+const fx = umap(effects);
 const stop = () => {};
-const setFX = hook => {
-  const stack = [];
-  effects.set(hook, stack);
-  return stack;
-};
 
 const createEffect = asy => (effect, guards) => {
   const i = state.i++;
@@ -148,7 +140,7 @@ const createEffect = asy => (effect, guards) => {
     const update = asy ? reraf() : stop;
     const info = {clean: null, update, values: guards, stop};
     state.length = stack.push(info);
-    (effects.get(hook) || setFX(hook)).push(info);
+    (fx.get(hook) || fx.set(hook, [])).push(info);
     const invoke = () => { info.clean = effect(); };
     if (asy)
       info.stop = update(invoke);

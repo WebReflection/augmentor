@@ -38,6 +38,22 @@ var augmentor = (function (exports) {
     }
   }
 
+  var umap = (function (_) {
+    return {
+      // About: get: _.get.bind(_)
+      // It looks like WebKit/Safari didn't optimize bind at all,
+      // so that using bind slows it down by 60%.
+      // Firefox and Chrome are just fine in both cases,
+      // so let's use the approach that works fast everywhere 👍
+      get: function get(key) {
+        return _.get(key);
+      },
+      set: function set(key, value) {
+        return _.set(key, value), value;
+      }
+    };
+  });
+
   /*! (c) Andrea Giammarchi - ISC */
   var state = null; // main exports
 
@@ -85,13 +101,7 @@ var augmentor = (function (exports) {
     };
   }; // useState
 
-  var updates = new WeakMap();
-
-  var setRaf = function setRaf(hook) {
-    var update = reraf();
-    updates.set(hook, update);
-    return update;
-  };
+  var updates = umap(new WeakMap());
 
   var hookdate = function hookdate(hook, ctx, args) {
     hook.apply(ctx, args);
@@ -115,7 +125,7 @@ var augmentor = (function (exports) {
 
     if (i === length) state.length = stack.push({
       $: typeof value === 'function' ? value() : value,
-      _: asy ? updates.get(hook) || setRaf(hook) : hookdate
+      _: asy ? updates.get(hook) || updates.set(hook, reraf()) : hookdate
     });
     var ref = stack[i];
     return [ref.$, function (value) {
@@ -181,14 +191,9 @@ var augmentor = (function (exports) {
 
 
   var effects = new WeakMap();
+  var fx = umap(effects);
 
   var stop = function stop() {};
-
-  var setFX = function setFX(hook) {
-    var stack = [];
-    effects.set(hook, stack);
-    return stack;
-  };
 
   var createEffect = function createEffect(asy) {
     return function (effect, guards) {
@@ -231,7 +236,7 @@ var augmentor = (function (exports) {
           stop: stop
         };
         state.length = stack.push(_info);
-        (effects.get(hook) || setFX(hook)).push(_info);
+        (fx.get(hook) || fx.set(hook, [])).push(_info);
 
         var _invoke2 = function _invoke2() {
           _info.clean = effect();
