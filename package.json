@@ -8,10 +8,10 @@
   "scripts": {
     "build": "npm run cjs && rollup --config rollup.config.js && npm run min && npm run test && npm run size",
     "cjs": "ascjs esm cjs",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "min": "echo '/*! (c) Andrea Giammarchi - ISC */' > min.js && uglifyjs index.js -c -m >> min.js",
     "size": "cat index.js | wc -c;cat min.js | wc -c;gzip -c9 min.js | wc -c;cat min.js | brotli | wc -c",
-    "test": "istanbul cover test/index.js"
+    "test": "nyc node test/index.js"
   },
   "keywords": [
     "hooks",
@@ -27,15 +27,15 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "ascjs": "^3.1.2",
-    "coveralls": "^3.0.9",
-    "istanbul": "^0.4.5",
-    "rollup": "^2.0.6",
+    "coveralls": "^3.0.11",
+    "nyc": "^15.0.1",
+    "rollup": "^2.6.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "uglify-js": "^3.8.0"
+    "uglify-js": "^3.8.1"
   },
   "dependencies": {
     "reraf": "^1.1.1",

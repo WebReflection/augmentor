@@ -47,42 +47,40 @@ const contextual = fn => {
 };
 exports.contextual = contextual;
 
-// useState
+// useReducer
 const updates = umap(new WeakMap);
-
 const hookdate = (hook, ctx, args) => { hook.apply(ctx, args); };
 const defaults = {async: false, always: false};
+const getValue = (value, f) => typeof f == 'function' ? f(value) : f;
 
-const useState = (value, options) => {
+const useReducer = (reducer, value, init, options) => {
   const i = state.i++;
   const {hook, args, stack, length} = state;
-  const {async: asy, always} = (options || defaults);
   if (i === length)
-    state.length = stack.push({
-      $: typeof value === 'function' ? value() : value,
-      _: asy ? (updates.get(hook) || updates.set(hook, reraf())) : hookdate
-    });
+    state.length = stack.push({});
   const ref = stack[i];
-  return [ref.$, value => {
-    const $value = typeof value === 'function' ? value(ref.$) : value;
-    if (always || (ref.$ !== $value)) {
-      ref.$ = $value;
-      ref._(hook, null, args);
-    }
-  }];
-};
-exports.useState = useState;
-
-// useReducer
-const useReducer = (reducer, value, init, options) => {
-  const fn = typeof init === 'function';
-  // avoid `cons [state, update] = ...` Babel destructuring bloat
-  const pair = useState(fn ? init(value) : value, fn ? options : init);
-  return [pair[0], value => {
-    pair[1](reducer(pair[0], value));
-  }];
+  ref.args = args;
+  if (i === length) {
+    const fn = typeof init === 'function';
+    const {async: asy, always} = (fn ? options : init) || options || defaults;
+    ref.$ = fn ? init(value) : getValue(void 0, value);
+    ref._ = asy ? (updates.get(hook) || updates.set(hook, reraf())) : hookdate;
+    ref.f = value => {
+      const $value = reducer(ref.$, value);
+      if (always || (ref.$ !== $value)) {
+        ref.$ = $value;
+        ref._(hook, null, ref.args);
+      }
+    };
+  }
+  return [ref.$, ref.f];
 };
 exports.useReducer = useReducer;
+
+// useState
+const useState = (value, options) =>
+                          useReducer(getValue, value, void 0, options);
+exports.useState = useState;
 
 // useContext
 const hooks = new WeakMap;
