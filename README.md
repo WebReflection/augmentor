@@ -7,6 +7,10 @@
 React like [hooks](https://reactjs.org/docs/hooks-reference.html) for the masses.
 
 
+### Announcement
+
+If you're looking for a less configurable but smaller solution, as in ~0.8K once minified and gzipped, check [µhooks](https://github.com/WebReflection/uhooks#readme) out.
+
 
 #### V2 Breaking change
 
