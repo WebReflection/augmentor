@@ -6,8 +6,7 @@
   "main": "cjs/index.js",
   "unpkg": "min.js",
   "scripts": {
-    "build": "npm run cjs && rollup --config rollup.config.js && npm run clear && npm run min && npm run test && npm run size",
-    "clear": "sed -i 's/Object.defineProperty[^;]*;//' index.js",
+    "build": "npm run cjs && rollup --config rollup.config.js && npm run min && npm run test && npm run size",
     "cjs": "ascjs esm cjs",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "min": "echo '/*! (c) Andrea Giammarchi - ISC */' > min.js && uglifyjs index.js -c -m >> min.js",
